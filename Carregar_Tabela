@@ -1,0 +1,13 @@
+/*
+Vamos considerar um exemplo em que carregamos uma tabela Fact_Sales em um data warehouse. Essa tabela contém dados de transações de vendas com colunas como FactKey, DateKey, ProductKey, OrderID, Quantity, Price e LoadTime.
+
+Suponha que temos uma tabela de origem Order_Detail em um sistema OLTP com colunas: OrderID, OrderDate, ProductID, Quantity e Price.
+
+O exemplo de script SQL a seguir carrega a tabela Fact_Sales.
+*/
+-- Lookup keys in dimension tables
+INSERT INTO Fact_Sales (DateKey, ProductKey, OrderID, Quantity, Price, LoadTime)
+SELECT d.DateKey, p.ProductKey, o.OrderID, o.Quantity, o.Price, GETDATE()
+FROM Order_Detail o
+JOIN Dim_Date d ON o.OrderDate = d.Date
+JOIN Dim_Product p ON o.ProductID = p.ProductID;
