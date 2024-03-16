@@ -1,0 +1,15 @@
+--  alterar SCD do tipo 2 para a tabela Dim_Products
+
+IF EXISTS (SELECT 1 FROM Dim_Products WHERE SourceKey = @ProductID AND IsActive = 'True')
+BEGIN
+    -- Existing product record
+    UPDATE Dim_Products
+    SET ValidTo = GETDATE(), IsActive = 'False'
+    WHERE SourceKey = @ProductID AND IsActive = 'True';
+END
+ELSE
+BEGIN
+    -- New product record
+    INSERT INTO Dim_Products (SourceKey, ProductName, StartDate, EndDate, IsActive)
+    VALUES (@ProductID, @ProductName, GETDATE(), '9999-12-31', 'True');
+END
