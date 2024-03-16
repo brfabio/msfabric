@@ -1,0 +1,29 @@
+/*
+A instrução COPY serve como o principal método para importar dados no Warehouse. 
+Ele facilita a ingestão de dados eficiente de uma conta externa de armazenamento do Microsoft Azure.
+
+Atualmente, a instrução COPY dá suporte para os formatos de arquivo PARQUET e CSV.
+*/
+
+-----------------------------------------------------------------------------------------------------------
+--  O exemplo a seguir mostra como carregar um arquivo CSV.
+-----------------------------------------------------------------------------------------------------------
+
+COPY my_table
+FROM 'https://myaccount.blob.core.windows.net/myblobcontainer/folder0/*.csv, 
+    https://myaccount.blob.core.windows.net/myblobcontainer/folder1/'
+WITH (
+    FILE_TYPE = 'CSV',
+    CREDENTIAL=(IDENTITY= 'Shared Access Signature', SECRET='<Your_SAS_Token>')
+    FIELDTERMINATOR = '|'
+)
+
+-----------------------------------------------------------------------------------------------------------
+--  O exemplo a seguir mostra como carregar um arquivo PARQUET.
+-----------------------------------------------------------------------------------------------------------
+
+COPY INTO test_parquet
+FROM 'https://myaccount.blob.core.windows.net/myblobcontainer/folder1/*.parquet'
+WITH (
+    CREDENTIAL=(IDENTITY= 'Shared Access Signature', SECRET='<Your_SAS_Token>')
+)
